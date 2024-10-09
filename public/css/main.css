@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap');
+
+/* Set the background color, text color, and font for the entire body */
+body {
+    background-color: rgb(4, 91, 98);
+    color: white;
+    font-family: 'Oswald', sans-serif;
+}
+
+
+
+.container {
+    padding-top: 90px;
+}
+
+h2 {
+    color: white;
+}
+
+a {
+    color: #d1d1d1;
+}
+
+a:hover {
+    color: white;
+}
