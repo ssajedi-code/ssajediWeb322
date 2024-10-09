@@ -1,0 +1,26 @@
+{
+  "name": "web322-app",
+  "version": "1.0.0",
+  "description": "this is a2 package json",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssajediWeb322"
+  },
+  "keywords": [
+    "node",
+    "web322",
+    "express.js",
+    "bootstrap",
+    "css"
+  ],
+  "author": "Seyed Hossein Sajedi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
