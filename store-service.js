@@ -1,58 +1,141 @@
-const fs = require('fs');
-
-let items = [];
+let items = []; // Array to store items
 let categories = [];
 
-module.exports.initialize = function() {
+const fs = require('fs');
+const path = require('path');
+
+// Function for initializing the data
+const initialize = () => {
     return new Promise((resolve, reject) => {
-        fs.readFile('./data/items.json', 'utf8', (err, data) => {
+        fs.readFile(path.join(__dirname, 'data', 'items.json'), 'utf8', (err, data) => {
             if (err) {
-                reject("unable to read items file");
-                return;
+                reject("Unable to read file items.json");
+            } else {
+                items = JSON.parse(data);
+                fs.readFile(path.join(__dirname, 'data', 'categories.json'), 'utf8', (err, data) => {
+                    if (err) {
+                        reject("Unable to read file categories.json");
+                    } else {
+                        categories = JSON.parse(data);
+                        resolve();
+                    }
+                });
             }
-
-            items = JSON.parse(data);
-
-            fs.readFile('./data/categories.json', 'utf8', (err, data) => {
-                if (err) {
-                    reject("unable to read categories file");
-                    return;
-                }
-
-                categories = JSON.parse(data);
-                resolve();
-            });
         });
     });
 };
 
-module.exports.getAllItems = function() {
+// Add Item Method (Updated)
+function addItem(itemData) {
     return new Promise((resolve, reject) => {
-        if (items.length > 0) {
+        if (!itemData.title || !itemData.category || !itemData.price) {
+            reject("Missing required fields");
+            return;
+        }
+
+        itemData.published = itemData.published ? true : false;
+        itemData.id = items.length + 1; // Assign a new ID
+        itemData.postDate = new Date().toISOString().split('T')[0]; // Set current date as postDate
+        items.push(itemData);
+        resolve(itemData); 
+    });
+}
+
+// Get Published Items by Category (New)
+const getPublishedItemsByCategory = (category) => {
+    return new Promise((resolve, reject) => {
+        const filteredItems = items.filter(item => item.published && item.category == category);
+        if (filteredItems.length > 0) {
+            resolve(filteredItems);
+        } else {
+            reject("No results returned");
+        }
+    });
+};
+
+// Get All Items
+const getAllItems = () => {
+    return new Promise((resolve, reject) => {
+        if (items.length == 0) {
+            reject("No items returned");
+        } else {
             resolve(items);
-        } else {
-            reject("no results returned");
         }
     });
 };
 
-module.exports.getPublishedItems = function() {
+// Get Published Items
+const getPublishedItems = () => {
     return new Promise((resolve, reject) => {
-        const publishedItems = items.filter(item => item.published === true);
-        if (publishedItems.length > 0) {
+        const publishedItems = items.filter(item => item.published == true);
+        if (publishedItems.length == 0) {
+            reject("No published items returned");
+        } else {
             resolve(publishedItems);
-        } else {
-            reject("no results returned");
         }
     });
 };
 
-module.exports.getCategories = function() {
+// Get Categories
+const getCategories = () => {
     return new Promise((resolve, reject) => {
-        if (categories.length > 0) {
-            resolve(categories);
+        if (categories.length == 0) {
+            reject("No categories returned");
         } else {
-            reject("no results returned");
+            resolve(categories);
         }
     });
 };
+
+// QUERY ITEMS MODULES BELOW
+
+// By Category
+function getItemsByCategory(category) {
+    return new Promise((resolve, reject) => {
+        const itemsByCategory = items.filter(item => item.category == category);
+        if (itemsByCategory.length > 0) {
+            resolve(itemsByCategory);
+        } else {
+            reject("No results returned");
+        }
+    });
+}
+
+// By MinDate
+function getItemsByMinDate(minDateStr) {
+    return new Promise((resolve, reject) => {
+        const minDate = new Date(minDateStr);
+        const itemsByDate = items.filter(item => new Date(item.postDate) >= minDate);
+        if (itemsByDate.length > 0) {
+            resolve(itemsByDate);
+        } else {
+            reject("No results returned");
+        }
+    });
+}
+
+// By ID
+function getItemById(id) {
+    return new Promise((resolve, reject) => {
+        const item = items.find(item => item.id == id);
+        if (item) {
+            resolve(item);
+        } else {
+            reject("No result returned");
+        }
+    });
+}
+
+// Export the methods
+module.exports = {
+    initialize,
+    getAllItems,
+    getPublishedItems,
+    getCategories,
+    addItem,
+    getItemsByCategory,
+    getItemsByMinDate,
+    getItemById,
+    getPublishedItemsByCategory // New method
+};
+ 

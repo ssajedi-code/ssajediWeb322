@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="row">
+        <!-- Main Content on the left-->
+        <div class="col-md-9-custom">
+            <h1 class="my-4">Shop</h1>
+            <p>Total Items: {{items.length}}</p>
+            <div class="row">
+                {{#if items}}
+                    {{#each items}}
+                        <div class="col-md-4" style="flex: 5">
+                            <div class="card mb-4 shadow-sm">
+                                <img src="{{this.featureImage}}" class="card-img-top" alt="{{this.title}}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{this.title}}</h5>
+                                    <p class="card-text">{{this.body}}</p>
+                                    <p class="card-text"><strong>Price:</strong> ${{this.price}}</p>
+                                    <p class="card-text"><small class="text-muted">Posted on: {{this.postDate}}</small></p>
+                                    <a href="/shop/{{this.id}}" class="btn btn-primary">View Item</a>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <div class="col-md-12 text-center">
+                        <h2>No items available.</h2>
+                        <p>Please check back later.</p>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <!-- Categories sidebar on the right -->
+        <div class="col-md-3-custom" style="flex: 2">
+            {{#if categories}}
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="/shop">All Categories</a>
+                    </li>
+                    {{#each categories}}
+                        <li class="list-group-item">
+                            <a href="/shop?category={{this.id}}">{{this.category}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <div class="text-center">
+                    <h4>No categories found.</h4>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
